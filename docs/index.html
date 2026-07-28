@@ -91,8 +91,8 @@
     </div>
     <h1>AppsAudio</h1>
     <p class="tag">Set each app's speaker volume on its own, without changing what gets recorded.</p>
-    <a class="btn" href="#build">Build from source</a>
-    <span class="req">Requires macOS 14.4 or later · no prebuilt download yet</span>
+    <a class="btn" href="https://github.com/Alyetama/AppsAudio/releases/latest/download/AppsAudio.dmg">Download for macOS</a>
+    <span class="req">Requires macOS 14.4 or later · unsigned, so right-click and Open on first launch</span>
   </header>
 
   <section>
@@ -110,8 +110,9 @@
 
   <section id="build">
     <h2>Build it</h2>
-    <p>Not published anywhere yet, so there is no clone URL and no release to download. From a copy of the source:</p>
-    <pre><code>cd AppsAudio
+    <p>Prefer to build it yourself:</p>
+    <pre><code>git clone https://github.com/Alyetama/AppsAudio.git
+cd AppsAudio
 ./build_app.sh
 cp -R build/AppsAudio.app /Applications/</code></pre>
     <p class="muted">The build is ad-hoc signed with a stable identity, so macOS remembers the audio-capture permission between launches.</p>
@@ -126,7 +127,7 @@ cp -R build/AppsAudio.app /Applications/</code></pre>
   </section>
 
   <footer>
-    Built by <a href="https://github.com/Alyetama">Alyetama</a>
+    Built by <a href="https://github.com/Alyetama">Alyetama</a> · <a href="https://github.com/Alyetama/AppsAudio">Source on GitHub</a> · MIT
   </footer>
 
 </div>

@@ -6,7 +6,9 @@ Mute an app in AppsAudio and it goes quiet on your speakers only. The app keeps 
 
 ## Status
 
-Working and in daily use, but local only. There is no GitHub repo, no release, and no prebuilt binary yet — build it from source with the steps below. Tested on Apple silicon under macOS 26.5; it has no architecture restriction, but it has not been run on Intel.
+Working and in daily use. [Download the DMG](https://github.com/Alyetama/AppsAudio/releases/latest/download/AppsAudio.dmg) or build from source below.
+
+The app is unsigned — there is no Apple Developer ID behind it — so macOS blocks it on first open. Right-click AppsAudio in Applications, choose Open, then confirm. Tested on Apple silicon under macOS 26.5; there is no architecture restriction in the build, but it has not been run on Intel.
 
 ## How it works
 
