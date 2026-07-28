@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AppsAudio — per-app speaker volume for macOS</title>
+<meta name="description" content="A macOS menu-bar mixer that sets each app's speaker volume on its own, without changing what gets recorded.">
+<style>
+  :root {
+    --bg: #f6f6f8;
+    --card: #ffffff;
+    --text: #1a1a1f;
+    --muted: #5c5c6a;
+    --line: #e4e4ea;
+    --accent1: #5c6bfa;
+    --accent2: #8b47f2;
+    --code-bg: #f0f0f4;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0e0e12;
+      --card: #17171d;
+      --text: #f2f2f5;
+      --muted: #9a9aab;
+      --line: #26262f;
+      --code-bg: #101014;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 22px; }
+  header { text-align: center; padding: 84px 0 48px; }
+  .icon {
+    width: 104px; height: 104px; border-radius: 24px;
+    background: linear-gradient(160deg, var(--accent1), var(--accent2));
+    display: inline-flex; align-items: center; justify-content: center;
+    box-shadow: 0 18px 44px rgba(92,107,250,.32);
+    margin-bottom: 24px;
+  }
+  h1 { font-size: 44px; margin: 0 0 10px; letter-spacing: -.02em; }
+  .tag { font-size: 20px; color: var(--muted); margin: 0 auto 30px; max-width: 30em; }
+  .btn {
+    display: inline-block; text-decoration: none; color: #fff;
+    background: linear-gradient(160deg, var(--accent1), var(--accent2));
+    padding: 13px 26px; border-radius: 12px; font-weight: 600; font-size: 16px;
+  }
+  .btn:hover { opacity: .92; }
+  .req { display: block; margin-top: 12px; font-size: 14px; color: var(--muted); }
+  section { padding: 34px 0; border-top: 1px solid var(--line); }
+  h2 { font-size: 24px; letter-spacing: -.01em; margin: 0 0 14px; }
+  p { color: var(--text); }
+  .muted { color: var(--muted); }
+  ol, ul { padding-left: 20px; }
+  li { margin: 6px 0; }
+  pre {
+    background: var(--code-bg); border: 1px solid var(--line);
+    border-radius: 10px; padding: 16px; overflow-x: auto; font-size: 14px;
+  }
+  code { font-family: "SF Mono", ui-monospace, Menlo, monospace; }
+  .callout {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; padding: 16px 18px; margin-top: 14px;
+  }
+  footer { text-align: center; padding: 46px 0 60px; color: var(--muted); font-size: 14px; }
+  footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="icon" aria-hidden="true">
+      <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+        <g stroke="#fff" stroke-width="3.4" stroke-linecap="round">
+          <line x1="13" y1="10" x2="13" y2="42"/>
+          <line x1="26" y1="10" x2="26" y2="42"/>
+          <line x1="39" y1="10" x2="39" y2="42"/>
+        </g>
+        <g fill="#fff">
+          <circle cx="13" cy="30" r="6"/>
+          <circle cx="26" cy="19" r="6"/>
+          <circle cx="39" cy="34" r="6"/>
+        </g>
+      </svg>
+    </div>
+    <h1>AppsAudio</h1>
+    <p class="tag">Set each app's speaker volume on its own, without changing what gets recorded.</p>
+    <a class="btn" href="#build">Build from source</a>
+    <span class="req">Requires macOS 14.4 or later · no prebuilt download yet</span>
+  </header>
+
+  <section>
+    <h2>The point</h2>
+    <p>Mute an app in AppsAudio and it goes quiet on your speakers only. The app keeps producing audio, so anything capturing it — a screen recorder, ScreenCaptureKit, another audio tap — still gets the full signal.</p>
+    <p class="muted">Turn something down in your ears without dropping it from the recording. That's the one thing most volume tricks get wrong.</p>
+  </section>
+
+  <section>
+    <h2>How it works</h2>
+    <p>macOS 14.4 added Core Audio process taps. When you lower or mute an app, AppsAudio puts a muted tap on it. That pulls the app's audio out of the output mix but leaves the source alone, then re-renders it at your chosen volume through a private aggregate device.</p>
+    <p>Apps sitting at 100% and unmuted are never tapped. They play untouched, no added latency. The engine only steps in once you actually move a slider.</p>
+    <p class="muted">Settings are saved under the owning app's bundle ID, so an Electron app that plays through helper processes gets one row and one setting rather than several.</p>
+  </section>
+
+  <section id="build">
+    <h2>Build it</h2>
+    <p>Not published anywhere yet, so there is no clone URL and no release to download. From a copy of the source:</p>
+    <pre><code>cd AppsAudio
+./build_app.sh
+cp -R build/AppsAudio.app /Applications/</code></pre>
+    <p class="muted">The build is ad-hoc signed with a stable identity, so macOS remembers the audio-capture permission between launches.</p>
+  </section>
+
+  <section>
+    <h2>First launch</h2>
+    <p>AppsAudio lives in the menu bar as a small mixer-sliders icon. No Dock icon, no window.</p>
+    <div class="callout">
+      The first time you mute or lower an app, macOS asks <em>"AppsAudio wants to record this computer's audio."</em> Click Allow. This is the system-audio-capture permission, separate from the microphone one — nothing changes volume until you grant it.
+    </div>
+  </section>
+
+  <footer>
+    Built by <a href="https://github.com/Alyetama">Alyetama</a>
+  </footer>
+
+</div>
+</body>
+</html>
